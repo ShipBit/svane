@@ -85,29 +85,34 @@
 	const currentBreakpointName = breakpointMatcher();
 
 	let innerWidth;
+	let innerHeight;
 
 	$: percent = Math.round(calculateViewportPercentage(breakpoints, innerWidth) * 100);
 </script>
 
-<svelte:window bind:innerWidth />
+<svelte:window bind:innerWidth bind:innerHeight />
 
-<div class="absolute top-0 w-screen bg-gray-600 text-white p-4">
+<div class="absolute top-0 w-screen bg-gray-800 text-white p-4">
 	<div class="flex space-x-4 items-center">
 		{#each Object.keys(mediaQueries) as breakpoint}
 			{#if $currentBreakpointName === breakpoint}
-				<div class="w-full h-4 bg-gray-200 rounded-full dark:bg-gray-700">
+				<div class="relative w-full bg-slate-700 border-2 border-slate-300 rounded-xl">
 					<div
-						class="h-5 bg-blue-600 rounded-full dark:bg-blue-500 text-center p-0.5 leading-none"
+						class="absolute h-full bg-blue-800 text-center rounded-xl"
 						style={`width: ${percent}%`}
+					/>
+					<div
+						class="relative flex space-x-6 lg:space-x-8 xl:space-x-10 2xl:space-x-16 items-center justify-center text-slate-50"
 					>
-						<div class="flex space-x-12 items-center justify-center">
-							<span class="font-bold text-blue-100">{breakpoint}</span>
-							<span class="text-xs font-semibold text-blue-50">{percent}%</span>
-						</div>
+						<span class="font-semibold text-xs">{percent}%</span>
+						<span class="font-bold">{breakpoint}</span>
+						<span class="font-semibold text-xs">{innerWidth} x {innerHeight}</span>
 					</div>
 				</div>
 			{:else}
-				<div class="">{breakpoint}</div>
+				<div class="py-0 px-4 border-2 border-slate-400 text-slate-400 rounded-xl">
+					{breakpoint}
+				</div>
 			{/if}
 		{/each}
 	</div>
