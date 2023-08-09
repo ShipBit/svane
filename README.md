@@ -42,6 +42,6 @@ Then in your +layout.svelte or any other page/component:
 
 <!-- hide Svane after the given milliseconds have passed (default: 2500) -->
 <Svane duration={5000} />
+```
 
 You can mix and match these params, of course.
-```
