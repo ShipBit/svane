@@ -1,6 +1,16 @@
 {
 	"name": "@shipbit/svane",
 	"version": "1.0.0",
+	"license": "MIT",
+	"author": {
+		"name": "Simon Hopstätter",
+		"email": "simon.hopstaetter@shipbit.de",
+		"url": "https://shipbit.de"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ShipBit/svane"
+	},
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run package",
