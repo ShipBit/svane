@@ -3,6 +3,8 @@
 Svane is a simple Svelte component that allows you to see the Tailwind viewport / breakpoint you are currently in and the "distance" to the next viewport (as progress percentage).
 Svane displayed a fixed bar at the top or bottom of the screen, overlaying your content.
 
+![](svane.gif)
+
 By default, the Svane bar is shown initially after reloading the page and whenever you resize the browser window. It will then vanish after a short delay automatically.
 Force to show it by pressing "Shift + T" on your keyboard. If you do press the shortcut, Svane will stay open until you press it again.
 
