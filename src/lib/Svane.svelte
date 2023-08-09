@@ -3,6 +3,7 @@
 	import { readable } from 'svelte/store';
 
 	// TODO: Get from Tailwind config
+	/** @type {Object.<string, {Object.<string, number>}>} */
 	export let breakpoints = {
 		sm: { max: 767 },
 		md: { min: 768, max: 1023 },
@@ -11,8 +12,13 @@
 		'2xl': { min: 1536 }
 	};
 
+	/** @type {boolean} */
 	export let stayOpen = false;
+
+	/** @type {number} */
 	export let duration = 2500;
+
+	/** @type {('top'|'bottom')} */
 	export let position = 'top';
 
 	let show = false;
