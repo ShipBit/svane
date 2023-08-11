@@ -1,16 +1,14 @@
 <script>
 	import { fly } from 'svelte/transition';
 	import { readable } from 'svelte/store';
+	import resolveConfig from 'tailwindcss/resolveConfig';
+	import tailwindConfig from 'tailwind-config';
 
-	// TODO: Get from Tailwind config
+	const config = resolveConfig(tailwindConfig);
+	console.log(config.theme.screens);
+
 	/** @type {Object.<string, {Object.<string, number|string>}>} */
-	export let breakpoints = {
-		sm: { max: '767px' },
-		md: { min: '768px', max: '1023px' },
-		lg: { min: '1024px', max: '1279px' },
-		xl: { min: '1280px', max: '1535px' },
-		'2xl': { min: '1536px' }
-	};
+	export let breakpoints = config.theme.screens;
 
 	/** @type {boolean} */
 	export let stayOpen = false;
@@ -37,7 +35,7 @@
 	};
 
 	const numericBreakpoints = breakpoints && normalizeBreakpoints(breakpoints);
-	console.log(numericBreakpoints);
+
 	for (const [name, sizes] of Object.entries(numericBreakpoints)) {
 		let mediaQuery = '';
 		if (sizes.min) {
@@ -185,9 +183,7 @@
 							class="absolute h-full bg-blue-800 text-center rounded-xl"
 							style={`width: ${percent}%`}
 						/>
-						<div
-							class="relative flex space-x-6 lg:space-x-8 xl:space-x-10 2xl:space-x-16 items-center justify-center text-slate-50"
-						>
+						<div class="relative flex space-x-10 items-center justify-center text-slate-50">
 							<span class="font-semibold text-xs">{percent}%</span>
 							<span class="font-bold">{breakpoint}</span>
 							<span class="font-semibold text-xs">{innerWidth} x {innerHeight}</span>
