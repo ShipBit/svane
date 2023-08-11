@@ -34,7 +34,8 @@ Then in your +layout.svelte or any other page/component:
 ```svelte
 <!-- Breakpoint override: Use the ones defined in your Tailwind theme config here. -->
 <!-- Svane uses the default Tailwind breakpoints (sm, md, lg, xl, 2xl) by default. -->
-<Svane breakpoints={{ phone: { max: 767 }, tablet: { min: 768, max: 1279 }, desktop: { min: 1280 } }}/>
+<!-- Both numeric values and CSS strings (with px) are fine. -->
+<Svane breakpoints={{ phone: { max: 767 }, tablet: { min: '768px', max: 1279 }, desktop: { min: '1280px' } }}/>
 
 <!-- Don't autohide Svane -->
 <Svane stayOpen />

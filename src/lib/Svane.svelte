@@ -3,13 +3,13 @@
 	import { readable } from 'svelte/store';
 
 	// TODO: Get from Tailwind config
-	/** @type {Object.<string, {Object.<string, number>}>} */
+	/** @type {Object.<string, {Object.<string, number|string>}>} */
 	export let breakpoints = {
-		sm: { max: 767 },
-		md: { min: 768, max: 1023 },
-		lg: { min: 1024, max: 1279 },
-		xl: { min: 1280, max: 1535 },
-		'2xl': { min: 1536 }
+		sm: { max: '767px' },
+		md: { min: '768px', max: '1023px' },
+		lg: { min: '1024px', max: '1279px' },
+		xl: { min: '1280px', max: '1535px' },
+		'2xl': { min: '1536px' }
 	};
 
 	/** @type {boolean} */
@@ -24,7 +24,21 @@
 	let show = false;
 	let mediaQueries = {};
 
-	for (const [name, sizes] of Object.entries(breakpoints)) {
+	export const normalizeBreakpoints = (breakpoints) => {
+		for (const key in breakpoints) {
+			if (breakpoints[key].min && isNaN(breakpoints[key].min)) {
+				breakpoints[key].min = Number(breakpoints[key].min.replace('px', ''));
+			}
+			if (breakpoints[key].max && isNaN(breakpoints[key].max)) {
+				breakpoints[key].max = Number(breakpoints[key].max.replace('px', ''));
+			}
+		}
+		return breakpoints;
+	};
+
+	const numericBreakpoints = breakpoints && normalizeBreakpoints(breakpoints);
+	console.log(numericBreakpoints);
+	for (const [name, sizes] of Object.entries(numericBreakpoints)) {
 		let mediaQuery = '';
 		if (sizes.min) {
 			mediaQuery += `(min-width: ${sizes.min}px)`;
@@ -40,11 +54,11 @@
 		mediaQueries[name] = mediaQuery;
 	}
 
-	function calculateViewportPercentage(breakpoints, innerWidth) {
+	function calculateViewportPercentage(numericBreakpoints, innerWidth) {
 		let matchingBreakpoint = null;
 
-		for (const breakpoint in breakpoints) {
-			const values = breakpoints[breakpoint];
+		for (const breakpoint in numericBreakpoints) {
+			const values = numericBreakpoints[breakpoint];
 			const min = values.min || 0;
 			const max = values.max || Infinity;
 
@@ -147,7 +161,7 @@
 	let innerWidth;
 	let innerHeight;
 
-	$: percent = Math.round(calculateViewportPercentage(breakpoints, innerWidth) * 100);
+	$: percent = Math.round(calculateViewportPercentage(numericBreakpoints, innerWidth) * 100);
 </script>
 
 <svelte:window
@@ -158,7 +172,7 @@
 
 {#if show}
 	<div
-		class="absolute top-0 w-screen bg-gray-800 text-white p-4"
+		class="fixed top-0 w-screen bg-gray-800 text-white p-4"
 		class:top-0={position === 'top'}
 		class:bottom-0={position === 'bottom'}
 		transition:fly={{ y: position === 'top' ? -200 : 200, duration: 400 }}
