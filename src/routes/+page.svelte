@@ -17,12 +17,12 @@
 	<p>
 		By default, the Svane bar is shown initially after reloading the page and whenever you resize
 		the browser window. It will then vanish after a short delay automatically. Force to show it by
-		pressing "Shift + T" on your keyboard. If you do press the shortcut, Svane will stay open until
+		pressing <span><kbd><kbd>Shift</kbd> + <kbd>T</kbd></kbd></span> on your keyboard. If you do press the shortcut, Svane will stay open until
 		you press it again.
 	</p>
 	<p>
-		You can either install Svane as dependecy using the package manager of your choice or just
-		copy&paste the `Svane.svelte` file into your project. There are no third-party dependencies
+		You can either install Svane as dependecy using a package manager of your choice or just
+		copy + paste the `Svane.svelte` file into your project. There are no third-party dependencies
 		apart from Tailwind itself, so it's that simple!
 	</p>
 
@@ -64,3 +64,23 @@ bash npm install @shipbit/svane
 
 	<p>You can mix and match these params, of course.</p>
 </main>
+
+
+<style>
+	kbd > kbd {
+	display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-width: 1px;
+    border-color: hsl(220 13% 69%);
+    --tw-border-opacity: .2;
+    --tw-bg-opacity: 1;
+    background-color: hsl(213, 18%, 12%);
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border-radius: 3px;
+    border-bottom-width: 2px;
+	color: white;
+    
+	}
+</style>
