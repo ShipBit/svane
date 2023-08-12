@@ -1,16 +1,17 @@
 <script>
 	import { fly } from 'svelte/transition';
 	import { readable } from 'svelte/store';
+	import resolveConfig from 'tailwindcss/resolveConfig';
+	import tailwindConfig from 'tailwind-config';
 
-	// TODO: Get from Tailwind config
+	const config = resolveConfig(tailwindConfig);
+	console.log(config.theme.screens);
 	/** @type {Object.<string, {Object.<string, number>}>} */
-	export let breakpoints = {
-		sm: { max: 767 },
-		md: { min: 768, max: 1023 },
-		lg: { min: 1024, max: 1279 },
-		xl: { min: 1280, max: 1535 },
-		'2xl': { min: 1536 }
-	};
+	export let breakpoints = config.theme.screens;
+
+	// // TODO: Get from Tailwind config
+	// /** @type {Object.<string, {Object.<string, number>}>} */
+	// export let breakpoints;
 
 	/** @type {boolean} */
 	export let stayOpen = false;
@@ -21,10 +22,39 @@
 	/** @type {('top'|'bottom')} */
 	export let position = 'top';
 
+	export const convertBreakpoints = (breakpoints) => {
+    const convertedBreakpoints = {};
+
+    const breakpointKeys = Object.keys(breakpoints);
+    for (let i = 0; i < breakpointKeys.length; i++) {
+        const currentKey = breakpointKeys[i];
+        const currentVal = parseInt(breakpoints[currentKey]);
+
+        if (i === 0) {
+            // First breakpoint
+			const nextKey = breakpointKeys[i + 1];
+            const nextVal = parseInt(breakpoints[nextKey]);
+            convertedBreakpoints[currentKey] = { max: nextVal - 1 };
+        } else if (i === breakpointKeys.length - 1) {
+            // Last breakpoint
+            convertedBreakpoints[currentKey] = { min: currentVal };
+        } else {
+			// Other Breakpoints
+            const nextKey = breakpointKeys[i + 1];
+            const nextVal = parseInt(breakpoints[nextKey]);
+            convertedBreakpoints[currentKey] = { min: currentVal, max: nextVal - 1 };
+        }
+    }
+    console.log("convertedBreakpoints", convertedBreakpoints);
+    return convertedBreakpoints;
+};
+	const testVar = convertBreakpoints(breakpoints)
+	console.log("testVar", testVar)
+
 	let show = false;
 	let mediaQueries = {};
 
-	for (const [name, sizes] of Object.entries(breakpoints)) {
+	for (const [name, sizes] of Object.entries(testVar)) {
 		let mediaQuery = '';
 		if (sizes.min) {
 			mediaQuery += `(min-width: ${sizes.min}px)`;
@@ -40,16 +70,17 @@
 		mediaQueries[name] = mediaQuery;
 	}
 
-	function calculateViewportPercentage(breakpoints, innerWidth) {
+	function calculateViewportPercentage(arr, innerWidth) {
 		let matchingBreakpoint = null;
 
-		for (const breakpoint in breakpoints) {
-			const values = breakpoints[breakpoint];
+		for (const breakpoint in arr) {
+			const values = arr[breakpoint];
 			const min = values.min || 0;
 			const max = values.max || Infinity;
-
+			
 			if (min <= innerWidth && innerWidth <= max) {
 				matchingBreakpoint = values;
+
 				break;
 			}
 		}
