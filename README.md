@@ -14,7 +14,7 @@ There are no third-party dependencies apart from Tailwind itself, so it's that s
 ## Installation
 
 ```bash
-npm install @shipbit/svane
+npm install -D @shipbit/svane
 ```
 
 Then in your +layout.svelte or any other page/component:
