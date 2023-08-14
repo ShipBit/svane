@@ -5,7 +5,6 @@
 	import tailwindConfig from 'tailwind-config';
 
 	const config = resolveConfig(tailwindConfig);
-	console.log(config.theme.screens);
 
 	/** @type {Object.<string, {Object.<string, number|string>}>} */
 	export let breakpoints = config.theme.screens;

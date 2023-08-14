@@ -1,6 +1,6 @@
 <script>
 	import Svane from '$lib/Svane.svelte';
-	import '../app.css';
+	import '../app.postcss';
 </script>
 
 {#if import.meta.env.DEV}
@@ -17,13 +17,18 @@
 	<p>
 		By default, the Svane bar is shown initially after reloading the page and whenever you resize
 		the browser window. It will then vanish after a short delay automatically. Force to show it by
-		pressing "Shift + T" on your keyboard. If you do press the shortcut, Svane will stay open until
-		you press it again.
+		pressing <span>
+			<kbd>
+				<kbd class="keyboard-shortcut">Shift</kbd>
+				+
+				<kbd class="keyboard-shortcut">T</kbd>
+			</kbd>
+		</span> on your keyboard. If you do press the shortcut, Svane will stay open until you press it again.
 	</p>
 	<p>
-		You can either install Svane as dependecy using the package manager of your choice or just
-		copy&paste the `Svane.svelte` file into your project. There are no third-party dependencies
-		apart from Tailwind itself, so it's that simple!
+		You can either install Svane as dependecy using a package manager of your choice or just copy +
+		paste the `Svane.svelte` file into your project. There are no third-party dependencies apart
+		from Tailwind itself, so it's that simple!
 	</p>
 
 	<h2>Installation</h2>
