@@ -105,7 +105,7 @@
 		}
 	}
 
-	export const shortcut = (_node, params) => {
+	const shortcut = (_node, params) => {
 		let handler;
 		const removeHandler = () => window.removeEventListener('keydown', handler),
 			setHandler = () => {
