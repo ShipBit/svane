@@ -11,9 +11,20 @@
 	<h1>Svane: Your flag in the Tailwind</h1>
 	<p>
 		Svane is a simple Svelte component that allows you to see the Tailwind viewport / breakpoint you
-		are currently in and the "distance" to the next viewport (as progress percentage). Svane
-		displayed a fixed bar at the top or bottom of the screen, overlaying your content.
+		are currently in and the "distance" to the next viewport (as progress percentage). It is
+		displayed as a fixed bar at the top or bottom of the screen, overlaying your content.
 	</p>
+	<p>
+		Svane reads the Tailwind config file of your project and automatically displays the breakpoints
+		you have defined there. Note that currently only screen configs in the format
+		<code>'tablet': 640px'</code> (using <code>min-width</code>) are supported, see
+		<a href="https://tailwindcss.com/docs/screens">Tailwind docs</a>.
+	</p>
+
+	<video autoplay loop muted playsinline class="w-full">
+		<source src="/svane.mp4" type="video/mp4" />
+	</video>
+
 	<p>
 		By default, the Svane bar is shown initially after reloading the page and whenever you resize
 		the browser window. It will then vanish after a short delay automatically. Force to show it by
@@ -27,16 +38,14 @@
 	</p>
 	<p>
 		You can either install Svane as dependecy using a package manager of your choice or just copy +
-		paste the `Svane.svelte` file into your project. There are no third-party dependencies apart
-		from Tailwind itself, so it's that simple!
+		paste the <code>Svane.svelte</code> file into your project. There are no third-party dependencies
+		apart from Tailwind itself, so it's that simple!
 	</p>
 
 	<h2>Installation</h2>
-	<pre>
-bash npm install @shipbit/svane
-	</pre>
+	<pre>npm install -D @shipbit/svane</pre>
 
-	<p>Then in your +layout.svelte or any other page/component:</p>
+	<p>Then in your <code>+layout.svelte</code> or any other page/component:</p>
 
 	<pre>
 {`<script>

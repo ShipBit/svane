@@ -1,7 +1,10 @@
 # Svane - Your flag in the Tailwind
 
 Svane is a simple Svelte component that allows you to see the Tailwind viewport / breakpoint you are currently in and the "distance" to the next viewport (as progress percentage).
-Svane displayed a fixed bar at the top or bottom of the screen, overlaying your content.
+It is displayed as a fixed bar at the top or bottom of the screen, overlaying your content.
+
+Svane reads the Tailwind config file of your project and automatically displays the breakpoints you have defined there.
+Note that currently only screen configs in the format `tablet: '640px'` (using `min-width`) are supported, see [Tailwind docs](https://tailwindcss.com/docs/screens).
 
 ![](svane.gif)
 
@@ -14,29 +17,25 @@ There are no third-party dependencies apart from Tailwind itself, so it's that s
 ## Installation
 
 ```bash
-npm install @shipbit/svane
+npm install -D @shipbit/svane
 ```
 
-Then in your +layout.svelte or any other page/component:
+Then in your `+layout.svelte` or any other page/component:
 
 ```svelte
 <script>
- import Svane from '@shipbit/svane';
+	import { browser } from '$app/environment'; // in case you're using SSR
+	import Svane from '@shipbit/svane';
 </script>
 
-{#if import.meta.env.DEV}
- <Svane />
+{#if import.meta.env.DEV && browser}
+	<Svane />
 {/if}
 ```
 
 ### Parameters (all optional)
 
 ```svelte
-<!-- Breakpoint override: Use the ones defined in your Tailwind theme config here. -->
-<!-- Svane uses the default Tailwind breakpoints (sm, md, lg, xl, 2xl) by default. -->
-<!-- Both numeric values and CSS strings (with px) are fine. -->
-<Svane breakpoints={{ phone: { max: 767 }, tablet: { min: '768px', max: 1279 }, desktop: { min: '1280px' } }}/>
-
 <!-- Don't autohide Svane -->
 <Svane stayOpen />
 
