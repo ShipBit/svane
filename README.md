@@ -14,10 +14,41 @@ Force to show it by pressing "Shift + T" on your keyboard. If you do press the s
 You can either install Svane as dependecy using the package manager of your choice or just copy&paste the `Svane.svelte` file into your project.
 There are no third-party dependencies apart from Tailwind itself, so it's that simple!
 
+## Migration v1 -> v2
+
+The old `breakpoints` property was removed because it's now read from your `tailwind.config.js` file.
+See the Installation section below for more details.
+
 ## Installation
 
 ```bash
 npm install -D @shipbit/svane
+```
+
+Now you have to include the Tailwind config in your `vite.config.js` file so that Svane can read it:
+
+```js
+import { sveltekit } from '@sveltejs/kit/vite';
+import { defineConfig } from 'vite';
+import path from 'path';
+
+export default defineConfig({
+	build: {
+		commonjsOptions: {
+			include: ['tailwind-config.js', 'node_modules/**']
+		}
+	},
+	optimizeDeps: {
+		include: ['tailwind-config']
+	},
+	plugins: [sveltekit()],
+	resolve: {
+		alias: {
+			'@': path.resolve(__dirname, './src'),
+			'tailwind-config': path.resolve(__dirname, './tailwind.config.js')
+		}
+	}
+});
 ```
 
 Then in your `+layout.svelte` or any other page/component:

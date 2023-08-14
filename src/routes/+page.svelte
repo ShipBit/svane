@@ -17,7 +17,7 @@
 	<p>
 		Svane reads the Tailwind config file of your project and automatically displays the breakpoints
 		you have defined there. Note that currently only screen configs in the format
-		<code>'tablet': 640px'</code> (using <code>min-width</code>) are supported, see
+		<code>tablet: '640px'</code> (using <code>min-width</code>) are supported, see
 		<a href="https://tailwindcss.com/docs/screens">Tailwind docs</a>.
 	</p>
 
@@ -42,8 +42,42 @@
 		apart from Tailwind itself, so it's that simple!
 	</p>
 
+	<h2>Migration v1 -> v2</h2>
+	<p>
+		The old <code>breakpoints</code> property was removed because it's now read from your
+		<code>tailwind.config.js</code> file. See the Installation section below for more details.
+	</p>
+
 	<h2>Installation</h2>
 	<pre>npm install -D @shipbit/svane</pre>
+
+	<p>
+		Now you have to include the Tailwind config in your <code>vite.config.js</code> file so that Svane
+		can read it:
+	</p>
+	<pre>
+{`import { sveltekit } from '@sveltejs/kit/vite';
+import { defineConfig } from 'vite';
+import path from 'path';
+
+export default defineConfig({
+	build: {
+		commonjsOptions: {
+			include: ['tailwind-config.js', 'node_modules/**']
+		}
+	},
+	optimizeDeps: {
+		include: ['tailwind-config']
+	},
+	plugins: [sveltekit()],
+	resolve: {
+		alias: {
+			'@': path.resolve(__dirname, './src'),
+			'tailwind-config': path.resolve(__dirname, './tailwind.config.js')
+		}
+	}
+});`}
+	</pre>
 
 	<p>Then in your <code>+layout.svelte</code> or any other page/component:</p>
 
