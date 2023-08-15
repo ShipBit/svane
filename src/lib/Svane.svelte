@@ -4,7 +4,6 @@
 	import { fly } from 'svelte/transition';
 	import resolveConfig from 'tailwindcss/resolveConfig';
 	import tailwindConfig from 'tailwind-config';
-	import { browser } from '$app/environment';
 
 	/** @type {boolean} */
 	export let stayOpen = false;
@@ -24,9 +23,6 @@
 	let show = false;
 
 	onMount(() => {
-		config = resolveConfig(tailwindConfig);
-		// console.log(config.theme.screens);
-
 		/* Tailwind config looks like this and is always orderd by size (small to large), see https://tailwindcss.com/docs/screens
 		 screens: {
 			'sm': '640px',
@@ -40,6 +36,7 @@
 			'2xl': '1536px',
 			// => @media (min-width: 1536px) { ... }
     	} */
+		config = resolveConfig(tailwindConfig);
 
 		for (const [name, value] of Object.entries(config.theme.screens)) {
 			screens[name] = {
@@ -144,7 +141,7 @@
 	use:shortcut={{ shift: true, code: 'KeyT', callback: () => (show = !show) }}
 />
 
-{#if browser && show}
+{#if show}
 	<div
 		class="fixed top-0 w-screen bg-gray-800 text-white py-4 px-6"
 		class:top-0={position === 'top'}

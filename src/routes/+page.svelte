@@ -56,18 +56,14 @@
 		can read it:
 	</p>
 	<pre>
-{`import { sveltekit } from '@sveltejs/kit/vite';
+{`import path from 'path';
+import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
-import path from 'path';
 
 export default defineConfig({
-	build: {
-		commonjsOptions: {
-			include: ['tailwind-config.js', 'node_modules/**']
-		}
-	},
 	optimizeDeps: {
-		include: ['tailwind-config']
+		include: ['tailwind-config'],
+		force: true // force to refresh the config file on change in DEV mode
 	},
 	plugins: [sveltekit()],
 	resolve: {
@@ -79,14 +75,19 @@ export default defineConfig({
 });`}
 	</pre>
 
+	<p class="font-bold">
+		Important: If you change the screens in your <code>tailwind.config.js</code> file, you have to restart
+		the dev server!
+	</p>
 	<p>Then in your <code>+layout.svelte</code> or any other page/component:</p>
 
 	<pre>
 {`<script>
 	import Svane from '@shipbit/svane';
+	import { browser } from '$app/environment';
 </script>
 
-{#if import.meta.env.DEV}
+{#if import.meta.env.DEV && browser}
 	<Svane />
 {/if}`}
 </pre>
@@ -94,13 +95,7 @@ export default defineConfig({
 	<h3>Parameters (all optional):</h3>
 
 	<pre>
-{`<!-- Breakpoint override: Use the ones defined in your Tailwind theme config here. -->
-<!-- Svane uses the default Tailwind breakpoints (sm, md, lg, xl, 2xl) by default. -->
-<Svane
-	breakpoints={{ phone: { max: 767 }, tablet: { min: 768, max: 1279 }, desktop: { min: 1280 } }}
-/>
-
-<!-- Don't autohide Svane -->
+{`<!-- Don't autohide Svane -->
 <Svane stayOpen />
 
 <!-- default: 'top' -->

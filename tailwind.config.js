@@ -4,6 +4,8 @@ import typography from '@tailwindcss/typography';
 export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
+		extend: {},
+		// This is a custom override for demonstration purposes:
 		screens: {
 			phone: '576px',
 			tablet: '1024px',

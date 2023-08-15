@@ -28,18 +28,14 @@ npm install -D @shipbit/svane
 Now you have to include the Tailwind config in your `vite.config.js` file so that Svane can read it:
 
 ```js
+import path from 'path';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
-import path from 'path';
 
 export default defineConfig({
-	build: {
-		commonjsOptions: {
-			include: ['tailwind-config.js', 'node_modules/**']
-		}
-	},
 	optimizeDeps: {
-		include: ['tailwind-config']
+		include: ['tailwind-config'],
+		force: true // force to refresh the config file on change in DEV mode
 	},
 	plugins: [sveltekit()],
 	resolve: {
@@ -51,12 +47,14 @@ export default defineConfig({
 });
 ```
 
+**Important: If you change the screens in your `tailwind.config.js` file, you have to restart the dev server!**
+
 Then in your `+layout.svelte` or any other page/component:
 
 ```svelte
 <script>
-	import { browser } from '$app/environment'; // in case you're using SSR
 	import Svane from '@shipbit/svane';
+	import { browser } from '$app/environment'; // in case you're using SSR
 </script>
 
 {#if import.meta.env.DEV && browser}
