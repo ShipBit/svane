@@ -1,16 +1,9 @@
 <script>
-	import { fly } from 'svelte/transition';
+	import { onMount } from 'svelte';
 	import { readable } from 'svelte/store';
-
-	// TODO: Get from Tailwind config
-	/** @type {Object.<string, {Object.<string, number>}>} */
-	export let breakpoints = {
-		sm: { max: 767 },
-		md: { min: 768, max: 1023 },
-		lg: { min: 1024, max: 1279 },
-		xl: { min: 1280, max: 1535 },
-		'2xl': { min: 1536 }
-	};
+	import { fly } from 'svelte/transition';
+	import resolveConfig from 'tailwindcss/resolveConfig';
+	import tailwindConfig from 'tailwind-config';
 
 	/** @type {boolean} */
 	export let stayOpen = false;
@@ -21,45 +14,75 @@
 	/** @type {('top'|'bottom')} */
 	export let position = 'top';
 
+	let config;
+	let screens = {};
+
+	let innerWidth;
+	let innerHeight;
+	let currentPosition;
 	let show = false;
-	let mediaQueries = {};
 
-	for (const [name, sizes] of Object.entries(breakpoints)) {
-		let mediaQuery = '';
-		if (sizes.min) {
-			mediaQuery += `(min-width: ${sizes.min}px)`;
-			if (sizes.max) {
-				mediaQuery += ' and ';
-			}
+	onMount(() => {
+		/* Tailwind config looks like this and is always orderd by size (small to large), see https://tailwindcss.com/docs/screens
+		 screens: {
+			'sm': '640px',
+			// => @media (min-width: 640px) { ... }
+			'md': '768px',
+			// => @media (min-width: 768px) { ... }
+			'lg': '1024px',
+			// => @media (min-width: 1024px) { ... }
+			'xl': '1280px',
+			// => @media (min-width: 1280px) { ... }
+			'2xl': '1536px',
+			// => @media (min-width: 1536px) { ... }
+    	} */
+		config = resolveConfig(tailwindConfig);
+
+		for (const [name, value] of Object.entries(config.theme.screens)) {
+			screens[name] = {
+				min: Number(value.replace('px', '')),
+				mediaQuery: `(min-width: ${value})`
+			};
 		}
 
-		if (sizes.max) {
-			mediaQuery += `(max-width: ${sizes.max}px)`;
-		}
+		currentPosition = readable({}, (set) => {
+			const refresh = () => {
+				for (const [name, value] of Object.entries(screens)) {
+					if (window.matchMedia(value.mediaQuery)?.matches) {
+						set({
+							screen: name,
+							percentage: Math.round(calculateViewportPercentage(name) * 100)
+						});
+					}
+				}
+				showForDuration();
+			};
 
-		mediaQueries[name] = mediaQuery;
-	}
+			refresh();
 
-	function calculateViewportPercentage(breakpoints, innerWidth) {
-		let matchingBreakpoint = null;
+			window.addEventListener('resize', refresh);
 
-		for (const breakpoint in breakpoints) {
-			const values = breakpoints[breakpoint];
-			const min = values.min || 0;
-			const max = values.max || Infinity;
+			return function stop() {
+				window.removeEventListener('resize', refresh);
+			};
+		});
+	});
 
-			if (min <= innerWidth && innerWidth <= max) {
-				matchingBreakpoint = values;
+	function calculateViewportPercentage(screenName) {
+		let currentScreen;
+		let nextScreen;
+
+		for (let i = 0; i < Object.keys(screens).length; i++) {
+			const screen = Object.keys(screens)[i];
+			if (screen === screenName) {
+				currentScreen = screens[screen];
+				nextScreen = screens[Object.keys(screens)[i + 1]];
 				break;
 			}
 		}
 
-		if (matchingBreakpoint === null) {
-			return `The given innerWidth (${innerWidth}) doesn't match any breakpoints`;
-		}
-
-		const rangeStart = matchingBreakpoint.min || 0;
-		const rangeEnd = matchingBreakpoint.max;
+		const rangeStart = currentScreen.min;
+		const rangeEnd = nextScreen && nextScreen.min - 1;
 
 		if (!rangeEnd) {
 			return 1;
@@ -79,38 +102,7 @@
 		}
 	}
 
-	function breakpointMatcher() {
-		if (typeof window === 'undefined') {
-			return readable(null);
-		}
-
-		return readable('', (set) => {
-			const breakpointNames = Object.keys(mediaQueries);
-
-			Object.keys(mediaQueries).forEach(
-				(mql) => (mediaQueries[mql] = window.matchMedia(mediaQueries[mql]))
-			);
-
-			const setCurrentBreakPoint = () => {
-				for (const size of breakpointNames) {
-					const mql = mediaQueries[size];
-					if (mql?.matches) {
-						set(size);
-					}
-				}
-			};
-
-			setCurrentBreakPoint();
-			showForDuration();
-
-			window.addEventListener('resize', () => {
-				setCurrentBreakPoint();
-				showForDuration();
-			});
-		});
-	}
-
-	export const shortcut = (_node, params) => {
+	const shortcut = (_node, params) => {
 		let handler;
 		const removeHandler = () => window.removeEventListener('keydown', handler),
 			setHandler = () => {
@@ -141,13 +133,6 @@
 			destroy: removeHandler
 		};
 	};
-
-	const currentBreakpointName = breakpointMatcher();
-
-	let innerWidth;
-	let innerHeight;
-
-	$: percent = Math.round(calculateViewportPercentage(breakpoints, innerWidth) * 100);
 </script>
 
 <svelte:window
@@ -158,30 +143,28 @@
 
 {#if show}
 	<div
-		class="absolute top-0 w-screen bg-gray-800 text-white p-4"
+		class="fixed top-0 w-screen bg-gray-800 text-white py-4 px-6"
 		class:top-0={position === 'top'}
 		class:bottom-0={position === 'bottom'}
 		transition:fly={{ y: position === 'top' ? -200 : 200, duration: 400 }}
 	>
 		<div class="flex space-x-4 items-center">
-			{#each Object.keys(mediaQueries) as breakpoint}
-				{#if $currentBreakpointName === breakpoint}
+			{#each Object.keys(screens) as screen}
+				{#if $currentPosition?.screen === screen}
 					<div class="relative w-full bg-slate-700 border border-blue-500 rounded-xl">
 						<div
 							class="absolute h-full bg-blue-800 text-center rounded-xl"
-							style={`width: ${percent}%`}
+							style={`width: ${$currentPosition.percentage}%`}
 						/>
-						<div
-							class="relative flex space-x-6 lg:space-x-8 xl:space-x-10 2xl:space-x-16 items-center justify-center text-slate-50"
-						>
-							<span class="font-semibold text-xs">{percent}%</span>
-							<span class="font-bold">{breakpoint}</span>
+						<div class="relative flex space-x-10 items-center justify-center text-slate-50">
+							<span class="font-semibold text-xs">{$currentPosition.percentage}%</span>
+							<span class="font-bold">{screen}</span>
 							<span class="font-semibold text-xs">{innerWidth} x {innerHeight}</span>
 						</div>
 					</div>
 				{:else}
 					<div class="py-0 px-4 border border-slate-400 text-slate-400 rounded-xl">
-						{breakpoint}
+						{screen}
 					</div>
 				{/if}
 			{/each}
