@@ -92,6 +92,20 @@ export default defineConfig({
 {/if}`}
 </pre>
 
+	<p>
+		Lastly, tell your app to generate Tailwind classes for Svane in <code>tailwind.config.js</code>:
+	</p>
+
+	<pre>
+{`/** @type {import('tailwindcss').Config} */
+export default {
+	content: [
+		'./src/**/*.{html,js,svelte,ts}', // your app's files
+		'./node_modules/@shipbit/svane/**/*.{html,js,svelte}' // add Svane here or it will look unstyled
+	], // ...
+};`}
+</pre>
+
 	<h3>Parameters (all optional):</h3>
 
 	<pre>

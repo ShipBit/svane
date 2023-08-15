@@ -62,6 +62,18 @@ Then in your `+layout.svelte` or any other page/component:
 {/if}
 ```
 
+Lastly, tell your app to generate Tailwind classes for Svane in `tailwind.config.js`:
+
+```js
+/** @type {import('tailwindcss').Config} */
+export default {
+	content: [
+		'./src/**/*.{html,js,svelte,ts}', // your app's files
+		'./node_modules/@shipbit/svane/**/*.{html,js,svelte}' // add Svane here or it will look unstyled
+	] // ...
+};
+```
+
 ### Parameters (all optional)
 
 ```svelte
