@@ -33,17 +33,17 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-	optimizeDeps: {
-		include: ['tailwind-config'],
-		force: true // force to refresh the config file on change in DEV mode
-	},
-	plugins: [sveltekit()],
-	resolve: {
-		alias: {
-			'@': path.resolve(__dirname, './src'),
-			'tailwind-config': path.resolve(__dirname, './tailwind.config.js')
-		}
-	}
+ optimizeDeps: {
+  include: ['tailwind-config'],
+  force: true // force to refresh the config file on change in DEV mode
+ },
+ plugins: [sveltekit()],
+ resolve: {
+  alias: {
+   '@': path.resolve(__dirname, './src'),
+   'tailwind-config': path.resolve(__dirname, './tailwind.config.js')
+  }
+ }
 });
 ```
 
@@ -53,12 +53,12 @@ Then in your `+layout.svelte` or any other page/component:
 
 ```svelte
 <script>
-	import { Svane } from '@shipbit/svane';
-	import { browser } from '$app/environment'; // in case you're using SSR
+ import { Svane } from '@shipbit/svane';
+ import { browser } from '$app/environment'; // in case you're using SSR
 </script>
 
 {#if import.meta.env.DEV && browser}
-	<Svane />
+ <Svane />
 {/if}
 ```
 
@@ -67,10 +67,10 @@ Lastly, tell your app to generate Tailwind classes for Svane in `tailwind.config
 ```js
 /** @type {import('tailwindcss').Config} */
 export default {
-	content: [
-		'./src/**/*.{html,js,svelte,ts}', // your app's files
-		'./node_modules/@shipbit/svane/**/*.{html,js,svelte}' // add Svane here or it will look unstyled
-	] // ...
+ content: [
+  './src/**/*.{html,js,svelte,ts}', // your app's files
+  './node_modules/@shipbit/svane/**/*.{html,js,svelte}' // add Svane here or it will look unstyled
+ ] // ...
 };
 ```
 
