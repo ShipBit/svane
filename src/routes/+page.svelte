@@ -83,7 +83,7 @@ export default defineConfig({
 
 	<pre>
 {`<script>
-	import Svane from '@shipbit/svane';
+	import { Svane } from '@shipbit/svane';
 	import { browser } from '$app/environment';
 </script>
 

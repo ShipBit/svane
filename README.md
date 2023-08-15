@@ -53,7 +53,7 @@ Then in your `+layout.svelte` or any other page/component:
 
 ```svelte
 <script>
-	import Svane from '@shipbit/svane';
+	import { Svane } from '@shipbit/svane';
 	import { browser } from '$app/environment'; // in case you're using SSR
 </script>
 
