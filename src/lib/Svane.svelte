@@ -143,7 +143,7 @@
 
 {#if show}
 	<div
-		class="fixed top-0 w-screen bg-gray-800 text-white py-4 px-6"
+		class="fixed left-0 right-0 w-screen bg-gray-800 text-white py-4 px-6 z-50"
 		class:top-0={position === 'top'}
 		class:bottom-0={position === 'bottom'}
 		transition:fly={{ y: position === 'top' ? -200 : 200, duration: 400 }}
